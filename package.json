@@ -1,0 +1,25 @@
+{
+  "name": "lexo",
+  "version": "0.0.1",
+  "author": "Rein Petersen",
+  "description": "Lexocographic key helper functions for firebase sorting/limiting",
+  "licenses": {
+    "type": "UNLICENSE",
+    "url": "https://github.com/ReinsBrain/lexo/blob/master/LICENSE"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ReinsBrain/sic-db.git"
+  },
+  "keywords": [
+    "firebase",
+    "Lexocographic"
+    "sorting",
+    "limiting",
+    "javascript"
+  ],
+  "dependencies": {},
+  "devDependencies": {},
+  "main": "lexo.js",
+  "scripts": {}
+}
