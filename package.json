@@ -1,6 +1,6 @@
 {
   "name": "lexo",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "Rein Petersen",
   "description": "Lexicographic key helper functions for firebase sorting/limiting",
   "licenses": {
