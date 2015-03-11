@@ -6,12 +6,12 @@ if (typeof module !== 'undefined' && typeof module.exports !=='undefined') { mod
 lexo.defaults = {
 	maxlen:64,
 	preserveSpace:false,
-	uppercase:false;
+	uppercase:false
 };
 
 
 lexo.LFPad = function ( strLexo, maxlen ) {
-	if (maxlen == null) maxlen = lexo.defaults.maxlen;
+	if (maxlen === null) maxlen = lexo.defaults.maxlen;
 	var pad = lexo.padstr(' ', maxlen);
 	return (strLexo + padstr).substring(0,maxlen);
 };
@@ -72,14 +72,14 @@ lexo.convertCapDiacritics = function (str) {
 };
 
 
-lexo.padstr = function ( char, len ) {
-	if (len == null) len = lexo.defaults.maxlen;
+lexo.padstr = function ( symbol, len ) {
+	if (len === null) len = lexo.defaults.maxlen;
 	var padstr = "";
 	for (var i = 0; i < len; i++) {
-		padstr.push(c);
+		padstr.push(symbol);
 	}
 	return padstr;
-}
+};
 
 
 lexo.LFIncrement = function ( strLexo, maxlen, boolNoPad, boolHigherOrder ) {
@@ -89,7 +89,7 @@ lexo.LFIncrement = function ( strLexo, maxlen, boolNoPad, boolHigherOrder ) {
 	// AAAAAAA_ > AAAAAAB (higher order recursive)
 	// ________ > null 
 
-	if (maxlen == null) maxlen = lexo.defaults.maxlen;
+	if (maxlen === null) maxlen = lexo.defaults.maxlen;
 	var pad = lexo.padstr('_', maxlen);
 	if ( strLexo.length > maxlen || strLexo == pad ) return null;
 	var charlist = " 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_"; // TODO: confirm this lexocographical ordering.
@@ -113,9 +113,10 @@ lexo.LFIncrement = function ( strLexo, maxlen, boolNoPad, boolHigherOrder ) {
 	else return lexo.lexoLFPad(strLexoi);
 };
 
+
 lexo.LimitFilter = function( strSearch, uppercase, preserveSpace, maxlen ) {
 
-	if (maxlen ==  null) maxlen = lexo.defaults.maxlen;
+	if (maxlen === null) maxlen = lexo.defaults.maxlen;
 	var str = this.lexo(strSearch, uppercase, preserveSpace, maxlen+1);
 
 	if (str.length > maxlen) {
@@ -128,11 +129,12 @@ lexo.LimitFilter = function( strSearch, uppercase, preserveSpace, maxlen ) {
 
 };
 
+
 lexo.lexo = function ( str, uppercase, preserveSpace, maxlen ) {
 
-	if (uppercase == null) uppercase = lexo.defaults.uppercase;
-	if (preserveSpace == null) preserveSpace = lexo.defaults.preserveSpace;
-	if (maxlen == null) maxlen = lexo.defaults.maxlen;
+	if (uppercase === null) uppercase = lexo.defaults.uppercase;
+	if (preserveSpace === null) preserveSpace = lexo.defaults.preserveSpace;
+	if (maxlen === null) maxlen = lexo.defaults.maxlen;
 
 	// 1.capitalize?
 	if (uppercase) str = strSearch.toUpperCase();
@@ -145,4 +147,3 @@ lexo.lexo = function ( str, uppercase, preserveSpace, maxlen ) {
 	else str = str.replace(/[^\w]/gi,'');
 
 };
-
