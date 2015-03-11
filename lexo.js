@@ -3,10 +3,19 @@ var lexo = {};
 
 if (typeof module !== 'undefined' && typeof module.exports !=='undefined') { module.exports = lexo; }
 
-
-lexo.LFPad = function ( strLexo ) {
-	return (strLexo + '        ').substring(0,8);
+lexo.defaults = {
+	maxlen:64,
+	preserveSpace:false,
+	uppercase:false;
 };
+
+
+lexo.LFPad = function ( strLexo, maxlen ) {
+	if (maxlen == null) maxlen = lexo.defaults.maxlen;
+	var pad = lexo.padstr(' ', maxlen);
+	return (strLexo + padstr).substring(0,maxlen);
+};
+
 
 lexo.convertCapDiacritics = function (str) {
 	str = str.toUpperCase();
@@ -62,14 +71,27 @@ lexo.convertCapDiacritics = function (str) {
 	return str;
 };
 
-lexo.LFIncrement = function ( strLexo, boolNoPad, boolHigherOrder ) {
+
+lexo.padstr = function ( char, len ) {
+	if (len == null) len = lexo.defaults.maxlen;
+	var padstr = "";
+	for (var i = 0; i < len; i++) {
+		padstr.push(c);
+	}
+	return padstr;
+}
+
+
+lexo.LFIncrement = function ( strLexo, maxlen, boolNoPad, boolHigherOrder ) {
 
 	// AAA > AAB
 	// AA_ > AA__ (lower order)
 	// AAAAAAA_ > AAAAAAB (higher order recursive)
 	// ________ > null 
 
-	if (strLexo.length > 8 || strLexo == '________') return null;
+	if (maxlen == null) maxlen = lexo.defaults.maxlen;
+	var pad = lexo.padstr('_', maxlen);
+	if ( strLexo.length > maxlen || strLexo == pad ) return null;
 	var charlist = " 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_"; // TODO: confirm this lexocographical ordering.
 	var lastchar = strLexo.charAt(strLexo.length - 1);
 	var lastcharidx = charlist.indexOf(lastchar);
@@ -78,8 +100,8 @@ lexo.LFIncrement = function ( strLexo, boolNoPad, boolHigherOrder ) {
 
 	if (lastcharidx == (charlist.length -1)) {
 		// we have to increment on another digit (higher or lower order)
-		if ( strLexo.length==8 || boolHigherOrder ) {
-			strLexoi = this.LFIncrement(strLexo.substring(0,strLexo.length-1),true,true);
+		if ( strLexo.length==maxlen || boolHigherOrder ) {
+			strLexoi = this.LFIncrement(strLexo.substring(0,strLexo.length-1),maxlen,true,true);
 		} else strLexoi += '_';
 	} else {
 		// increment last character
@@ -88,22 +110,39 @@ lexo.LFIncrement = function ( strLexo, boolNoPad, boolHigherOrder ) {
 	}
 
 	if (boolNoPad) return strLexoi;
-	else return HotLeads.lexoLFPad(strLexoi);
+	else return lexo.lexoLFPad(strLexoi);
 };
 
-lexo.LimitFilter = function(strSearch) {
-	// TODO: convert strSearch to lexo [ 0-9A-Z_]+8 limit pair
-	
-	strSearch = strSearch.toUpperCase();                           // 1.capitalize
-	
-	strSearch = HotLeads.convertCapitalizedDiacritics(strSearch);  // 2.convert diacritics to simple ascii
-	
-	strSearch = strSearcg.replace(/[^\w\s]/gi, '');                // 3. remove symbols/punctuation except space and underscore
+lexo.LimitFilter = function( strSearch, uppercase, preserveSpace, maxlen ) {
 
-	if (strSearch.length > 8) {     // truncate and return
-		 strSearch.substring(0,8);
-		 return strSearch;
-	} else return { startAt:HotLeads.lexoLFPad(strSearch), endAt:HotLeads.lexoLimitFilterIncrement(strSearch) };
+	if (maxlen ==  null) maxlen = lexo.defaults.maxlen;
+	var str = this.lexo(strSearch, uppercase, preserveSpace, maxlen+1);
+
+	if (str.length > maxlen) {
+		// truncate and return
+		strSearch.substring(0,maxlen);
+		return { startAt:lexo.lexoLFPad(str,maxlen) };
+	} else {
+		return { startAt:lexo.lexoLFPad(str,maxlen), endAt:lexo.lexoLimitFilterIncrement(str,maxlen) };
+	}
+
+};
+
+lexo.lexo = function ( str, uppercase, preserveSpace, maxlen ) {
+
+	if (uppercase == null) uppercase = lexo.defaults.uppercase;
+	if (preserveSpace == null) preserveSpace = lexo.defaults.preserveSpace;
+	if (maxlen == null) maxlen = lexo.defaults.maxlen;
+
+	// 1.capitalize?
+	if (uppercase) str = strSearch.toUpperCase();
+
+	// 2.convert diacritics to simple ascii
+	str = lexo.convertCapitalizedDiacritics(str);
+
+	// 3. remove symbols/punctuation except space and underscore
+	if (preserveSpace) str = str.replace(/[^\w\s]/gi,'');
+	else str = str.replace(/[^\w]/gi,'');
 
 };
 
